@@ -135,7 +135,7 @@ def water_viscosity_dynamic(temperature=25*unit('degC'),pressure=1*unit('atm')):
 def water_viscosity_kinematic(temperature=25*unit('degC'),pressure=1*unit('atm')):
     '''
     Return the kinematic viscosity of water in m2/s = Stokes
-    at the specified temperature.
+    at the specified temperature and pressure.
     
     Parameters
     ----------
@@ -149,6 +149,10 @@ def water_viscosity_kinematic(temperature=25*unit('degC'),pressure=1*unit('atm')
     -------
     Quantity
             The kinematic viscosity of water in Stokes (m2/s)
+
+    Notes
+    -----
+    Based on IAPWS97 model <http://www.iapws.org/release.html>
     
     '''
     # call IAPWS. The kinematic viscosity is returned in m**2/s units
