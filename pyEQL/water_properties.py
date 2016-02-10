@@ -116,70 +116,18 @@ def water_viscosity_dynamic(temperature=25*unit('degC'),pressure=1*unit('atm')):
                   
     Notes
     -----
-    Implements the international equation for viscosity of water as specified by NIST [#]_
-    
-    Valid for 273 < temperature < 1073 K and 0 < pressure < 100,000,000 Pa
-    
-    References
-    ----------
-    .. [#] Sengers, J.V. "Representative Equations for the Viscosity of Water Substance." 
-        J. Phys. Chem. Ref. Data 13(1), 1984.http://www.nist.gov/data/PDFfiles/jpcrd243.pdf
-    
-    Examples
-    --------
-    >>> water_viscosity_dynamic(20*unit('degC')) #doctest: +ELLIPSIS
-    <Quantity(0.000998588610804179, 'kilogram / meter / second')>
-    >>> water_viscosity_dynamic(unit('100 degC'),unit('25 MPa')) #doctest: +ELLIPSIS
-    <Quantity(0.00028165034364318573, 'kilogram / meter / second')>
-    >>> water_viscosity_dynamic(25*unit('degC'),0.1*unit('MPa')) #doctest: +ELLIPSIS
-    <Quantity(0.0008872817880143659, 'kilogram / meter / second')>
-    
-    #TODO - check these again after I implement pressure-dependent density function
+    Based on IAPWS97 model <http://www.iapws.org/release.html>
     
     '''
-    # generate warnings if temp or pressure are outside valid range of equation
-    if temperature < 273 * unit('K') or temperature > 1073 * unit('K'):
-        logger.error('Specified temperature (%s) exceeds valid range of NIST equation for viscosity of water. Cannot extrapolate.' % temperature)
-        return None
-        
-    if pressure < 0 * unit('Pa') or pressure > 100000000 * unit ('Pa'):
-        logger.error('Specified pressure (%s) exceeds valid range of NIST equation for viscosity of water. Cannot extrapolate.' % pressure)
-        return None
-    
-    # calculate dimensionless temperature and pressure
-    T_star = 647.27 #K
-    P_star = 22115000 #Pa
-    rho_star = 317.763 #kg/m3
-    
-    T_bar = temperature.to('K').magnitude / T_star
-    P_bar = pressure.to('Pa').magnitude / P_star
-    rho_bar = water_density(temperature,pressure).magnitude / rho_star
-    
-    # calculate the first function, mu_o
-    mu_star = 1e-6 #Pa-s
-    a = [0.0181583,0.0177624,0.0105287,-0.0036477]
-    sum_o = 0
-    mu_temp = 0
-    for index in range(len(a)):
-        sum_o += a[index] * T_bar ** -index
-    
-    mu_o = mu_star * math.sqrt(T_bar) / sum_o
-    
-    # calculate the second fucntion, mu_1
-    b=[[0.501938,0.235622,-0.274637,0.145831,-0.0270448],[0.162888,0.789393,-0.743539,0.263129,-0.0253093],[-0.130356,0.673665,-0.959456,0.347247,-0.0267758],[0.907919,1.207552,-0.687343,0.213486,-0.0822904],[-0.551119,0.0670665,-0.497089,0.100754,0.0602253],[0.146543,-0.0843370,0.195286,-0.032932,-0.0202595]]
-    mu_1 = 0
-    
-    for i in range(len(b)):
-        for j in range(len(b[i])):
-            mu_temp += rho_bar * b[i][j] * (1/T_bar -1 ) ** i * (rho_bar -1) ** j
-    
-    mu_1 = math.exp(mu_temp)
-    # multiply the functions to return the viscosity
-    viscosity = mu_o * mu_1 *unit('kg/m/s')
+    # call IAPWS. The density is returned in kg/m**3 units
+    # IAPWS expects temperature in K and pressure in MPa, so convert the units
+    from iapws import IAPWS97
+    h2o = IAPWS97(P=pressure.to('MPa').magnitude,T=temperature.to('K').magnitude)
+    viscosity = h2o.mu * unit('Pa * s')
     
     logger.info('Computed dynamic (absolute) viscosity of water as %s at T=%s and P = %s'  % (viscosity,temperature,pressure)) 
     
-    logger.debug('Computed dynamic (absolute) viscosity of water using empirical NIST equation described in Sengers, J.V. "Representative Equations for the Viscosity of Water Substance." J. Phys. Chem. Ref. Data 13(1), 1984.')
+    logger.debug('Computed dynamic (absolute) viscosity of water using the IAPWS97 standard')
     
     return viscosity.to('kg/m/s')
 
