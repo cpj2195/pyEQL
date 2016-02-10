@@ -244,6 +244,9 @@ class Solution:
             String representing the temperature, e.g. '25 degC'
         '''
         self.temperature = unit(temperature)
+        
+        # recalculate the volume
+        self._update_volume()
     
     def get_pressure(self):
         '''
@@ -265,6 +268,9 @@ class Solution:
             String representing the temperature, e.g. '25 degC'
         '''
         self.pressure = unit(pressure)
+        
+        # recalculate the volume
+        self._update_volume()
     
     def get_solvent_mass(self):
         '''
@@ -1780,7 +1786,7 @@ class Solution:
         
         return distance.to('nm')
     
-    def _update_volume(self):
+    def _(self):
         '''
         Recalculate the solution volume based on composition
         
@@ -1793,7 +1799,7 @@ class Solution:
         
         '''        
         # calculate the volume of the pure solvent
-        solvent_vol = self.get_solvent_mass() / h2o.water_density(self.get_temperature())
+        solvent_vol = self.get_solvent_mass() / h2o.water_density(self.get_temperature(),self.get_pressure())
         
         return solvent_vol.to('L')
         
