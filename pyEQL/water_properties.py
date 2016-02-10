@@ -163,17 +163,22 @@ def water_viscosity_kinematic(temperature=25*unit('degC'),pressure=1*unit('atm')
     
     logger.info('Computed kinematic viscosity of water as %s at T=%s and P = %s ' % (kviscosity,temperature,pressure)) 
     
+    logger.debug('Computed kinematic viscosity of water using the IAPWS97 standard.')
+    
     return kviscosity.to('m**2 / s')
     
 
-def water_dielectric_constant(temperature=25*unit('degC')):
+def water_dielectric_constant(temperature=25*unit('degC'),pressure=1*unit('atm')):
     '''    
-    Return the dielectric constant of water at the specified temperature.
+    Return the dielectric constant of water at the specified temperature and pressure.
     
     Parameters
     ----------
     temperature : Quantity, optional
                   The temperature. Defaults to 25 degC if omitted.
+    pressure    : Quantity, optional
+                  The ambient pressure of the solution. 
+                  Defaults to atmospheric pressure (1 atm) if omitted.
                   
     Returns
     -------
@@ -183,44 +188,18 @@ def water_dielectric_constant(temperature=25*unit('degC')):
     
     Notes
     -----
-    This function implements a quadratic fit of measured permittivity data as
-    reported in the CRC Handbook [#]_. The parameters given are valid over the
-    range 273 K to 372 K. Permittivity should not be extrapolated beyond this
-    range.
-    
-    .. math:: \\epsilon(T) = a + b T + c T^2
-    
-    References
-    ----------
-    .. [#] "Permittivity (Dielectric Constant) of Liquids." CRC Handbook of 
-            Chemistry and Physics, 92nd ed, pp 6-187 - 6-208.
-    
-    Examples
-    --------
-    >>> water_dielectric_constant(unit('20 degC')) #doctest: +ELLIPSIS
-    80.15060...
-    
-    Display an error if 'temperature' is outside the valid range
-    
-    >>> water_dielectric_constant(-5*unit('degC'))
-    
+    Based on the IAPWS97 standard <http://www.iapws.org/release.html>
      
     '''
-    # do not return anything if 'temperature' is outside the range for which
-    # this fit applies
-    if temperature < 273 * unit('K') or temperature > 372 * unit('K'):
-        logger.error('Specified temperature (%s) exceeds valid range of data. Cannot extrapolate.' % temperature.to('K'))
-        return None
+    # call IAPWS. The returned dielectric constant has no units.
+    # IAPWS expects temperature in K and pressure in MPa, so convert the units
+    from iapws import IAPWS97
+    h2o = IAPWS97(P=pressure.to('MPa').magnitude,T=temperature.to('K').magnitude)
+    dielectric = h2o.epsilon
     
-    # otherwise, calculate the dielectric constant using the quadratic fit    
-    a = 0.24921e3
-    b = -0.79069e0
-    c = 0.72997e-3
-    dielectric = a + b * temperature.to('K').magnitude + c * temperature.to('K').magnitude ** 2
+    logger.info('Computed dielectric constant of water as %s at T=%s and P = %s' % (dielectric,temperature,pressure))
     
-    logger.info('Computed dielectric constant of water as %s at %s' % (dielectric,temperature))
-    
-    logger.debug('Computed dielectric constant of water using empirical equation given in "Permittivity (Dielectric Constant) of Liquids." CRC Handbook of Chemistry and Physics, 92nd ed, pp 6-187 - 6-208.')
+    logger.debug('Computed dielectric constant of water using the IAPWS97 standard.')
     
     return dielectric
     
