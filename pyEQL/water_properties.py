@@ -119,7 +119,7 @@ def water_viscosity_dynamic(temperature=25*unit('degC'),pressure=1*unit('atm')):
     Based on IAPWS97 model <http://www.iapws.org/release.html>
     
     '''
-    # call IAPWS. The density is returned in kg/m**3 units
+    # call IAPWS. The viscosity is returned in Pa*s units
     # IAPWS expects temperature in K and pressure in MPa, so convert the units
     from iapws import IAPWS97
     h2o = IAPWS97(P=pressure.to('MPa').magnitude,T=temperature.to('K').magnitude)
@@ -150,19 +150,15 @@ def water_viscosity_kinematic(temperature=25*unit('degC'),pressure=1*unit('atm')
     Quantity
             The kinematic viscosity of water in Stokes (m2/s)
     
-    Examples
-    --------
-    >>> water_viscosity_kinematic()  #doctest: +ELLIPSIS
-    <Quantity(8.899146003595295e-07, 'meter ** 2 / second')>
-            
-    See Also
-    --------
-    water_viscosity_dynamic
-    water_density
-    
     '''
-    kviscosity = water_viscosity_dynamic(temperature,pressure) / water_density(temperature,pressure)
+    # call IAPWS. The kinematic viscosity is returned in m**2/s units
+    # IAPWS expects temperature in K and pressure in MPa, so convert the units
+    from iapws import IAPWS97
+    h2o = IAPWS97(P=pressure.to('MPa').magnitude,T=temperature.to('K').magnitude)
+    kviscosity = h2o.nu * unit('m**2/s')
+    
     logger.info('Computed kinematic viscosity of water as %s at T=%s and P = %s ' % (kviscosity,temperature,pressure)) 
+    
     return kviscosity.to('m**2 / s')
     
 
