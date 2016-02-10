@@ -32,8 +32,6 @@ ch.setFormatter(formatter)
 logger.addHandler(ch)
 
 def water_density(temperature=25*unit('degC'),pressure=1*unit('atm')):
-    # TODO add pressure??
-    # TODO more up to date equation??
     '''    
     Return the density of water in kg/m3 at the specified temperature and pressure.
     
@@ -52,28 +50,19 @@ def water_density(temperature=25*unit('degC'),pressure=1*unit('atm')):
     
     Notes
     -----
-    Based on the following empirical equation reported in [#]_
-    
-    
-    .. math:: \\rho_W = 999.65 + 0.20438 T - 6.1744e-2 T ^ {1.5}
-    
-    Where T is the temperature in Celsius.
-    
-    
-    .. [#] Sohnel, O and Novotny, P. //Densities of Aqueous Solutions of Inorganic Substances.// Elsevier Science, Amsterdam, 1985.
-    
-    Examples
-    --------
-    >>> water_density(25*unit('degC')) #doctest: +ELLIPSIS
-    <Quantity(997.0415, 'kilogram / meter ** 3')>
+    Based on IAPWS97 model <http://www.iapws.org/release.html>
+
     
     '''
-    # calculate the magnitude
-    density = 999.65 + 0.20438 * temperature.to('degC').magnitude - 6.1744e-2 * temperature.to('degC').magnitude ** 1.5
-    # assign the proper units
-    density = density  * unit('kg/m**3')
+    # call IAPWS. The density is returned in kg/m**3 units
+    # IAPWS expects temperature in K and pressure in MPa, so convert the units
+    from iapws import IAPWS97
+    h2o = IAPWS97(P=pressure.to('MPa'),T=temperature.to('K').magnitude)
+    density = h2o.rho * unit('kg/m**3')
+    
     logger.info('Computed density of water as %s at T= %s and P = %s' % (density,temperature,pressure))
-    logger.debug('Computed density of water using empirical relation in Sohnel and Novotny, "Densities of Aqueous Solutions of Inorganic Substances," 1985' )
+    logger.debug('Computed density of water using the IAPWS97 standard')
+    
     return density.to('kg/m**3')
     
 def water_specific_weight(temperature=25*unit('degC'),pressure=1*unit('atm')):
