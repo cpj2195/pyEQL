@@ -57,7 +57,7 @@ def water_density(temperature=25*unit('degC'),pressure=1*unit('atm')):
     # call IAPWS. The density is returned in kg/m**3 units
     # IAPWS expects temperature in K and pressure in MPa, so convert the units
     from iapws import IAPWS97
-    h2o = IAPWS97(P=pressure.to('MPa'),T=temperature.to('K').magnitude)
+    h2o = IAPWS97(P=pressure.to('MPa').magnitude,T=temperature.to('K').magnitude)
     density = h2o.rho * unit('kg/m**3')
     
     logger.info('Computed density of water as %s at T= %s and P = %s' % (density,temperature,pressure))
