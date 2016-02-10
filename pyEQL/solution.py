@@ -1786,7 +1786,7 @@ class Solution:
         
         return distance.to('nm')
     
-    def _(self):
+    def _update_volume(self):
         '''
         Recalculate the solution volume based on composition
         
