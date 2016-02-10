@@ -50,18 +50,18 @@ def water_density(temperature=25*unit('degC'),pressure=1*unit('atm')):
     
     Notes
     -----
-    Based on IAPWS97 model <http://www.iapws.org/release.html>
+    Based on IAPWS95 model <http://www.iapws.org/release.html>
 
     
     '''
     # call IAPWS. The density is returned in kg/m**3 units
     # IAPWS expects temperature in K and pressure in MPa, so convert the units
-    from iapws import IAPWS97
-    h2o = IAPWS97(P=pressure.to('MPa').magnitude,T=temperature.to('K').magnitude)
+    from iapws import IAPWS95
+    h2o = IAPWS95(P=pressure.to('MPa').magnitude,T=temperature.to('K').magnitude)
     density = h2o.rho * unit('kg/m**3')
     
     logger.info('Computed density of water as %s at T= %s and P = %s' % (density,temperature,pressure))
-    logger.debug('Computed density of water using the IAPWS97 standard')
+    logger.debug('Computed density of water using the IAPWS95 standard')
     
     return density.to('kg/m**3')
     
@@ -116,18 +116,18 @@ def water_viscosity_dynamic(temperature=25*unit('degC'),pressure=1*unit('atm')):
                   
     Notes
     -----
-    Based on IAPWS97 model <http://www.iapws.org/release.html>
+    Based on IAPWS95 model <http://www.iapws.org/release.html>
     
     '''
     # call IAPWS. The viscosity is returned in Pa*s units
     # IAPWS expects temperature in K and pressure in MPa, so convert the units
-    from iapws import IAPWS97
-    h2o = IAPWS97(P=pressure.to('MPa').magnitude,T=temperature.to('K').magnitude)
+    from iapws import IAPWS95
+    h2o = IAPWS95(P=pressure.to('MPa').magnitude,T=temperature.to('K').magnitude)
     viscosity = h2o.mu * unit('Pa * s')
     
     logger.info('Computed dynamic (absolute) viscosity of water as %s at T=%s and P = %s'  % (viscosity,temperature,pressure)) 
     
-    logger.debug('Computed dynamic (absolute) viscosity of water using the IAPWS97 standard')
+    logger.debug('Computed dynamic (absolute) viscosity of water using the IAPWS95 standard')
     
     return viscosity.to('kg/m/s')
 
@@ -152,18 +152,18 @@ def water_viscosity_kinematic(temperature=25*unit('degC'),pressure=1*unit('atm')
 
     Notes
     -----
-    Based on IAPWS97 model <http://www.iapws.org/release.html>
+    Based on IAPWS95 model <http://www.iapws.org/release.html>
     
     '''
     # call IAPWS. The kinematic viscosity is returned in m**2/s units
     # IAPWS expects temperature in K and pressure in MPa, so convert the units
-    from iapws import IAPWS97
-    h2o = IAPWS97(P=pressure.to('MPa').magnitude,T=temperature.to('K').magnitude)
+    from iapws import IAPWS95
+    h2o = IAPWS95(P=pressure.to('MPa').magnitude,T=temperature.to('K').magnitude)
     kviscosity = h2o.nu * unit('m**2/s')
     
     logger.info('Computed kinematic viscosity of water as %s at T=%s and P = %s ' % (kviscosity,temperature,pressure)) 
     
-    logger.debug('Computed kinematic viscosity of water using the IAPWS97 standard.')
+    logger.debug('Computed kinematic viscosity of water using the IAPWS95 standard.')
     
     return kviscosity.to('m**2 / s')
     
@@ -188,18 +188,18 @@ def water_dielectric_constant(temperature=25*unit('degC'),pressure=1*unit('atm')
     
     Notes
     -----
-    Based on the IAPWS97 standard <http://www.iapws.org/release.html>
+    Based on the IAPWS95 standard <http://www.iapws.org/release.html>
      
     '''
     # call IAPWS. The returned dielectric constant has no units.
     # IAPWS expects temperature in K and pressure in MPa, so convert the units
-    from iapws import IAPWS97
-    h2o = IAPWS97(P=pressure.to('MPa').magnitude,T=temperature.to('K').magnitude)
+    from iapws import IAPWS95
+    h2o = IAPWS95(P=pressure.to('MPa').magnitude,T=temperature.to('K').magnitude)
     dielectric = h2o.epsilon
     
     logger.info('Computed dielectric constant of water as %s at T=%s and P = %s' % (dielectric,temperature,pressure))
     
-    logger.debug('Computed dielectric constant of water using the IAPWS97 standard.')
+    logger.debug('Computed dielectric constant of water using the IAPWS95 standard.')
     
     return dielectric
     
