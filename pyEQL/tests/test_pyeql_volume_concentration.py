@@ -44,7 +44,7 @@ class Test_empty_solution(unittest.TestCase):
         result = self.s1.get_solvent_mass().to('kg').magnitude
         expected = 0.9970415
         
-        self.assertAlmostEqual(result,expected)
+        self.assertAlmostEqual(result,expected,4)
     
     # the temperature should be 25 degC
     def test_empty_solution_5(self):
@@ -383,9 +383,9 @@ class Test_get_amount(unittest.TestCase):
     # get_amount() - mol/kg
     def test_get_amount_molkg(self):
         result = self.s1.get_amount('Na+','mol/kg').magnitude
-        expected = 1.02181221888
+        expected = 1.0218
         
-        self.assertAlmostEqual(result,expected,9)
+        self.assertAlmostEqual(result,expected,4)
         
     # get_amount() - g/L
     def test_get_amount_gL(self):
@@ -413,7 +413,7 @@ class Test_get_amount(unittest.TestCase):
         result = self.s1.get_amount('Na+','fraction')
         expected = 0.01775457254
         
-        self.assertAlmostEqual(result,expected,9)    
+        self.assertAlmostEqual(result,expected,5)    
     
     
     
