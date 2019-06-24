@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 """
 This module contains classes, functions, and methods for reading input files
 and assembling database entries for use by pyEQL.

@@ -1,4 +1,7 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # logging system
+
 ''' Create a logging system using Python's built-in module. 
 
 Each module within pyEQL has its own logger, with a StreamHandler attached to it that

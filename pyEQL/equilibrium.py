@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 '''
 pyEQL methods for chemical equilibrium calculations (e.g. acid/base, reactions,
 redox, complexation, etc.)
