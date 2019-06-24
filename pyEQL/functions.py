@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 '''
 pyEQL functions that take Solution objects as inputs or return Solution objects
 
